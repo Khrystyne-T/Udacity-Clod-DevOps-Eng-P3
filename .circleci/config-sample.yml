@@ -1,5 +1,19 @@
 version: 2.1
 
+#            backend_ip=$(aws ec2 describe-instances \
+#              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+#              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+#              --output text)
+#            echo $backend_ip >> .circleci/ansible/inventory.txt
+#            cat .circleci/ansible/inventory.txt
+
+#  rollback-on-failure:
+#    description: Rollback to previous state when the previous step(s) have failed.
+#    steps:
+#      - run:
+#          name: Rollback
+#          when: on_fail
+
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.

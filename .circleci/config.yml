@@ -217,7 +217,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:latest
     steps:
       - checkout
       - run:
@@ -260,6 +260,10 @@ jobs:
           command: |
             apk add --no-cache ansible
       - run:
+          name: Make Directory
+          command:
+            mkdir -p project/.circleci/ansible/roles/deploy/artifacts
+      - run:
           name: Deploy backend
           command: |
             cd backend
@@ -267,6 +271,7 @@ jobs:
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
+            mv artifact.tar.gz project/.circleci/ansible/roles/deploy/artifacts/
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
