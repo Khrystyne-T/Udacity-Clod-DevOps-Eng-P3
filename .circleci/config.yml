@@ -223,12 +223,13 @@ jobs:
       - run:
           name: Get backend url
           command: |
+            npm install
             export PUBLIC_IP=$(aws ec2 describe-instances \
               --instance-ids $INSTANCE_ID \
               --query 'Reservations[].Instances[].PublicIpAddress' \
               --output text)
             export API_URL="http://${PUBLIC_IP}:3030"
-            echo "API_URL = ${API_URL}"
+            echo ${API_URL}"
             echo API_URL="http://${PUBLIC_IP}:3030" >> frontend/.env
             cat frontend/.env
             npm run build
@@ -242,6 +243,24 @@ jobs:
             aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
       - revert-migrations
+
+  deploy-backend:
+    docker:
+      - image: python:3.8-alpine3.12
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: [ 04:dd:12:88:f7:b8:92:c1:1a:9a:e1:28:60:a5:6e:86 ]
+      - attach_workspace:
+          at: my_workspace
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Deploy backend
+          command: |
+            # your code here
 
 
 # Orchestrate our job run sequence
