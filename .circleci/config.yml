@@ -21,7 +21,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = SUCCESS=$(curl --insecure https://kvdb.io/M6ufhpdLz3tp23wmyD76YY/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl --insecure https://kvdb.io/M6ufhpdLz3tp23wmyD76YY/migration_${CIRCLE_WORKFLOW_ID:0:7})
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -223,7 +223,6 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            npm install
             export PUBLIC_IP=$(aws ec2 describe-instances \
               --instance-ids $INSTANCE_ID \
               --query 'Reservations[].Instances[].PublicIpAddress' \
@@ -232,6 +231,7 @@ jobs:
             echo ${API_URL}"
             echo API_URL="http://${PUBLIC_IP}:3030" >> frontend/.env
             cat frontend/.env
+            npm install
             npm run build
       - run:
           name: Deploy frontend objects
@@ -254,9 +254,13 @@ jobs:
       - attach_workspace:
           at: my_workspace
       - run:
-          name: Install dependencies
+          name: Install system dependencies
           command: |
-            # your code here
+            apk add --no-cache openssh-client python3-dev
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --no-cache ansible
       - run:
           name: Deploy backend
           command: |
