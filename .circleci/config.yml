@@ -291,6 +291,62 @@ jobs:
       - destroy-environment
       - revert-migrations
 
+  smoke-test:
+    docker:
+      - image: python:3.8-alpine3.12
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install awscli
+          command: |
+            pip install awscli
+      - run:
+          name: Install curl
+          command: |
+            apk add --update curl
+      - run:
+          name: Retrieve back-end IP address
+          command: |
+            INSTANCE_ID=$(aws cloudformation describe-stacks \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Stacks[].Outputs[?OutputKey==`InstanceId`].OutputValue' \
+              --output text)
+            PUBLIC_IP=$(aws ec2 describe-instances \
+              --instance-ids $INSTANCE_ID \
+              --query 'Reservations[].Instances[].PublicIpAddress' \
+              --output text)
+            echo $PUBLIC_IP > .circleci/ansible/inventory.txt
+            echo "BACKEND_IP=$PUBLIC_IP" >> $BASH_ENV
+      - run:
+          name: Backend smoke test.
+          command: |
+            # Fetch and prepare the BACKEND_IP env var
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"; then
+                echo "API is running."
+                exit 0
+            else
+                echo "API is down."
+                exit 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            export FRONTEND_URL="http://${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com"
+            echo "Front-end URL: ${FRONTEND_URL}"
+            if curl "${FRONTEND_URL}" | grep "Welcome"
+            then
+                return 1
+            else
+                echo "Front-end smoke test failed"
+                return 1
+            fi
+      - destroy-environment
+      - revert-migrations
+      # Here's where you will add some code to rollback on failure
 
 
 # Orchestrate our job run sequence
@@ -320,4 +376,6 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-front-end]
 
