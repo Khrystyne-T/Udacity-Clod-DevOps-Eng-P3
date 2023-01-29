@@ -279,7 +279,7 @@ jobs:
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            mv artifact.tar.gz project/.circleci/ansible/roles/deploy/artifacts/
+            mv artifact.tar.gz project/.circleci/ansible/roles/deploy/artifacts/artifact.tar.gz
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
@@ -344,24 +344,39 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: change CloudFront distribution the new S3 bucket
           command: |
-            # your code here
+            export OldWorkflowID=$aws cloudformation \
+                        list-exports --query "Exports[?Name==\'WorkflowID\'].Value \
+                        --no-paginate --output text)
       - run:
           name: Update cloudfront distribution
           command: |
-            export OldWorkflowID=$aws cloudformation \
-            list-exports --query "Exports[?Name==\'WorkflowID\'].Value \
-            --no-paginate --output text)
-            echo $OldWorkflowID > ~/OldWorkflowID.txt
-            cat ~/OldWorkflowID.txt
-            
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
       # Here's where you will add some code to rollback on failure
+
+cleanup:
+    docker:
+      # Docker image here
+    steps:
+      # Checkout code from git
+      - run:
+          name: Get old stack workflow id
+          command: |
+            # your code here
+            export OldWorkflowID="the id here"
+            export STACKS=[] #put the list of stacks here
+      - run:
+          name: Remove old stacks and files
+          command: |
+            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            then
+              # your code here
+            fi
 
 
 # Orchestrate our job run sequence
