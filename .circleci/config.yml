@@ -217,7 +217,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:13.8.0-browsers
     steps:
       - checkout
       - run:
@@ -235,9 +235,7 @@ jobs:
           name: Install system dependencies
           command: |
             sudo apt-get update
-            sudo npm install -g aws-cli
-            sudo apt-get install -y curl
-            sudo apt-get install -y tar
+            sudo apt-get install curl tar -y
       - run:
           name: Deploy frontend objects
           command: |
@@ -356,7 +354,7 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
-            export oldWorkflowID=$aws cloudformation \
+            export OldWorkflowID=$aws cloudformation \
             list-exports --query "Exports[?Name==\'WorkflowID\'].Value \
             --no-paginate --output text)
             echo $OldWorkflowID > ~/OldWorkflowID.txt
