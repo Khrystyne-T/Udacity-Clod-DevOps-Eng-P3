@@ -217,7 +217,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: circleci/node:latest
+      - image: python:3.8-alpine3.12
     steps:
       - checkout
       - run:
@@ -231,6 +231,12 @@ jobs:
             echo "${API_URL}"
             echo API_URL="http://${PUBLIC_IP}:3030" >> frontend/.env
             cat frontend/.env
+      - run:
+          name: Install system dependencies
+          command: |
+            apk add --no-cache openssh-client python3-dev
+            apk add --no-cache nodejs npm
+            npm install -g aws-cli
       - run:
           name: Deploy frontend objects
           command: |
