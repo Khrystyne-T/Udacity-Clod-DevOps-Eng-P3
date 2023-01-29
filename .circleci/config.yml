@@ -237,10 +237,10 @@ jobs:
             apk add --no-cache openssh-client python3-dev
             apk add --no-cache nodejs npm
             npm install -g aws-cli
+            apk add --update curl
       - run:
-          name: Install Ansible
-          command: |
-            apk add --no-cache ansible
+          name: Add aws-cli to PATH
+          command: echo "export PATH=$PATH:$(npm root -g)/aws-cli/bin" >> $BASH_ENV
       - run:
           name: Deploy frontend objects
           command: |
