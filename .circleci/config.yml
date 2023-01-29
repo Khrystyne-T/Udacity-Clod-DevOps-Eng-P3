@@ -274,7 +274,7 @@ jobs:
           command: |
             apk add --no-cache openssh-client python3-dev
             apk add --no-cache nodejs npm
-            npm install -g aws-cli
+            pip install awscli
       - run:
           name: Install Ansible
           command: |
@@ -289,7 +289,7 @@ jobs:
             cd backend
             npm i
             npm run build
-            cd .circleci/ansible/artifacts
+            cd -p project/.circleci/ansible/artifacts
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
