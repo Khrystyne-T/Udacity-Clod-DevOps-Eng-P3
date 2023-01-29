@@ -303,22 +303,17 @@ jobs:
           command: |
             apk add --update curl
       - run:
-          name: Retrieve back-end IP address
+          name: Backend smoke test.
           command: |
+            # Fetch and prepare the BACKEND_IP env var
             INSTANCE_ID=$(aws cloudformation describe-stacks \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Stacks[].Outputs[?OutputKey==`InstanceId`].OutputValue' \
               --output text)
-            PUBLIC_IP=$(aws ec2 describe-instances \
+            BACKEND_IP=$(aws ec2 describe-instances \
               --instance-ids $INSTANCE_ID \
               --query 'Reservations[].Instances[].PublicIpAddress' \
               --output text)
-            echo $PUBLIC_IP > .circleci/ansible/inventory.txt
-            echo "BACKEND_IP=$PUBLIC_IP" >> $BASH_ENV
-      - run:
-          name: Backend smoke test.
-          command: |
-            # Fetch and prepare the BACKEND_IP env var
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok"; then
