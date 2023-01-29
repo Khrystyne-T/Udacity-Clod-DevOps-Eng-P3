@@ -1,0 +1,10 @@
+- name: "Install PM2"
+  npm:
+    name: pm2
+    global: yes
+
+- name: 'Move env vars'
+  become: true
+  copy:
+    src: myenv.sh
+    dest: /etc/profile.d/
