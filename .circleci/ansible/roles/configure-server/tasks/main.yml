@@ -1,3 +1,15 @@
+- name: "Add Node.js"
+  become: true
+  shell: |
+    curl -sL https://dep.nodesource.com/stup_13.x sudo -E bash -
+
+- name: "Install Node.js"
+  become: true
+  apt:
+    name: ["nodejs"]
+    state: latest
+    update_cache: yes
+
 - name: "Install PM2"
   npm:
     name: pm2
