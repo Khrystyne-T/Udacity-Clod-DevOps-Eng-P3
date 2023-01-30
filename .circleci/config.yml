@@ -281,10 +281,6 @@ jobs:
           name: Install Ansible
           command: |
             apk add --no-cache ansible
-#      - run:
-#          name: Make Directory
-#          command:
-#            mkdir -p project/.circleci/ansible/artifacts
       - run:
           name: Deploy backend
           command: |
@@ -295,7 +291,6 @@ jobs:
             cd .circleci/ansible
             mkdir files
             tar -C ../../../backend -czvf artifact.tar.gz .
-#            mv artifact.tar.gz project/.circleci/ansible/roles/deploy/artifacts/artifact.tar.gz
             cd ../
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
@@ -372,7 +367,7 @@ jobs:
 #            aws cloudformation deploy \
 #              --template-file .circleci/files/cloudfront.yml \
 #              --stack-name InitialStack \
-#              --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+#              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
 #      # Here's where you will add some code to rollback on failure
 #      - destroy-environment
 #      - revert-migrations
