@@ -1,16 +1,15 @@
-- name: "Backend app directory."
+- name: "Backend app directory"
   file:
     path: ~/backend-app
     state: directory
 
-- name: "Unpack the artifact."
+- name: "Unpack the artifact"
   become: yes
   unarchive:
     src: artifact.tar.gz
     dest: ~/backend-app
-    remote_src: true
 
-- name: "Install dependencies."
+- name: "Install dependencies"
   shell: |
     cd ~/backend-app
     npm install
