@@ -154,6 +154,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
             cat inventory.txt
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
@@ -382,9 +383,9 @@ jobs:
 #          name: Get old stack workflow id
 #          command: |
 #            export OldStacks=($(aws cloudformation list-stacks \
-#            --query "StackSummaries[*].StackName" \
-#            --stack-status-filter CREATE_COMPLETE --no-pagination \
-#            --output text))
+    #            --query "StackSummaries[*].StackName" \
+    #            --stack-status-filter CREATE_COMPLETE --no-pagination \
+    #            --output text))
 #            echo Stack Names: "${OldStacks[@]}"
 #            export OldWorkflowID=$(curl --insecure https://kvdb.io/M6ufhpdLz3tp23wmyD76YY/OldWorkFlowID)
 #            echo OldWorkflowID=$OldWorkflowID
