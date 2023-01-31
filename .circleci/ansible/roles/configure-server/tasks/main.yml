@@ -1,7 +1,7 @@
 - name: "Add Node.js"
   become: true
   shell: |
-    curl -sL https://dep.nodesource.com/stup_13.x sudo -E bash -
+    curl -sL https://dep.nodesource.com/setup_13.x | sudo -E bash -
 
 - name: "Install Node.js"
   become: true
