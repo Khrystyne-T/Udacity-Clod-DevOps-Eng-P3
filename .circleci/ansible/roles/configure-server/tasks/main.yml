@@ -1,19 +1,22 @@
 - name: "Add Node.js"
-  become: true
+  become: yes
   shell: |
     curl -sL https://dep.nodesource.com/setup_13.x | sudo -E bash -
 
 - name: "Install Node.js"
-  become: true
+  become: yes
   apt:
-    name: ["nodejs"]
+    name: "nodejs"
     state: latest
     update_cache: yes
 
 - name: "Install PM2"
+  become: yes
   npm:
     name: pm2
     global: yes
+    production: yes
+    state: present
 
 - name: 'Move env vars'
   become: true
