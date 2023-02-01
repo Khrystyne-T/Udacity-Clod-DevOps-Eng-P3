@@ -37,7 +37,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [ frontend-build ]
+          keys: [frontend-build]
       - run:
           name: Build front-end
           command: |
@@ -45,7 +45,7 @@ jobs:
             npm install
             npm run build
       - save_cache:
-          paths: [ frontend/node_modules ]
+          paths: [frontend/node_modules]
           key: frontend-build
 
   build-backend:
@@ -54,7 +54,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [ backend-build ]
+          keys: [backend-build]
       - run:
           name: Back-end build
           command: |
@@ -62,7 +62,7 @@ jobs:
             npm install
             npm run build
       - save_cache:
-          paths: [ backend/node_modules ]
+          paths: [backend/node_modules]
           key: backend-build
 
   test-frontend:
@@ -71,7 +71,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [ frontend-build ]
+          keys: [frontend-build]
       - run:
           name: Run frontend test
           command: |
@@ -85,7 +85,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [ backend-build ]
+          keys: [backend-build]
       - run:
           name: Run backend test
           command: |
@@ -99,7 +99,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [ frontend-build ]
+          keys: [frontend-build]
       - run:
           name: Run frontend scan
           command: |
@@ -115,7 +115,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [ backend-build ]
+          keys: [backend-build]
       - run:
           name: Run backend scan
           command: |
@@ -257,8 +257,8 @@ jobs:
             cd frontend
             npm install
             npm run build
-            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz ./dist
-            aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
       - revert-migrations
 
@@ -293,7 +293,7 @@ jobs:
             mkdir files
             cd files
             tar -C ../../../backend -czvf artifact.tar.gz .
-            cd ../
+            cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
