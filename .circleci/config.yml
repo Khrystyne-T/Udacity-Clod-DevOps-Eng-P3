@@ -282,7 +282,7 @@ jobs:
           name: Install system dependencies
           command: |
             apk add --no-cache openssh-client python3-dev
-            apt-get install ssh openssh-client openssh-server
+            apt add install ssh openssh-client openssh-server
             apk add --no-cache nodejs npm
             pip install awscli
             apk add --update curl
