@@ -418,7 +418,7 @@ jobs:
                     aws cloudformation delete-stack --stack-name "udapeople-frontend-$i"
                     aws cloudformation delete-stack --stack-name "udapeople-backend-$i"
                 else
-                    echo  "----------------Cannot cleanup------------"
+                    echo  '----------------Cannot cleanup------------'
                 fi
 
 
