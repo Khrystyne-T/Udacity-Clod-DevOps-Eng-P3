@@ -276,6 +276,8 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["8f:a5:73:aa:23:69:36:51:b4:93:72:a5:49:4f:98:11"]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install system dependencies
           command: |
@@ -286,12 +288,6 @@ jobs:
           name: Install Ansible
           command: |
             apk add --no-cache ansible
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Make Directory
-          command:
-            mkdir -p ~/project/.circleci/ansible/files
       - run:
           name: Deploy backend
           command: |
