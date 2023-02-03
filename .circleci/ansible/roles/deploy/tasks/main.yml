@@ -1,13 +1,18 @@
+- name: "Backend app directory"
+  file:
+    path: ~/backend-app
+    state: directory
+
 - name: "Unpack the artifact"
   become: yes
   unarchive:
     src: "files/artifact.tar.gz"
     dest: .
 
-#- name: "Install dependencies"
-#  shell: |
-#    cd ~/backend-app
-#    npm install
+- name: "Install dependencies"
+  shell: |
+    cd ~/backend-app
+    npm install
 #
 #- name: "Execute app with pm2"
 #  shell: |
