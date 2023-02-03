@@ -1,13 +1,8 @@
-- name: "Backend app directory"
-  file:
-    path: ~/backend-app
-    state: directory
-
 - name: "Unpack the artifact"
   become: yes
   unarchive:
     src: "files/artifact.tar.gz"
-    dest: ~/backend-app
+    dest: .
 
 #- name: "Install dependencies"
 #  shell: |
@@ -25,10 +20,14 @@
 #    forever start -c "ts-node -r tsconfig-paths/register -r dotenv/config src/main.ts" ./
 #  register: execute_node
 
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: yes
+
 - name: "Start app."
   become: yes
   shell : |
-    cd ~/backend-app
     npm install
     pm2 stop default
-    pm2 start npm --start
+    pm2 start npm -- start
