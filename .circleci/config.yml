@@ -362,10 +362,6 @@ jobs:
     steps:
       - checkout
       - run:
-            name: Install dependencies
-            command: |
-              yum install curl
-      - run:
           name: Save old workflow ID to bucket
           command: |
             export OldWorkflowID=$(aws cloudformation \
