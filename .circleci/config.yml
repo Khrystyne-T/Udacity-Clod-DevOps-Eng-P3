@@ -387,10 +387,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
-          command: |
-            yum install curl
-      - run:
           name: Get old stack workflow id
           command: |
             export STACKS=($(aws cloudformation list-stacks \
